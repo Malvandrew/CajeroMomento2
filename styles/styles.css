@@ -1,22 +1,22 @@
 :root {
-  color-scheme: light;
-  --ink: #182b2a;
-  --muted: #647572;
-  --paper: #f4f7f4;
-  --surface: #ffffff;
-  --line: #d9e2dd;
-  --brand: #12645a;
-  --brand-strong: #0b4c44;
-  --accent: #df7654;
-  --accent-soft: #f8e9e2;
-  --surface-dark: #173b37;
-  --success: #176a46;
-  --success-soft: #e9f5ee;
-  --danger: #9b2c24;
-  --danger-soft: #fff0ed;
-  --warning: #7a4b08;
-  --warning-soft: #fff5dc;
-  --focus: #e4a323;
+  color-scheme: dark;
+  --ink: #ffffff;
+  --muted: #ffffff;
+  --paper: #16151a;
+  --surface: #242329;
+  --line: #77727d;
+  --brand: #b400b4;
+  --brand-strong: #b400b4;
+  --accent: #ff9e80;
+  --accent-soft: #2d211f;
+  --surface-dark: #242329;
+  --success: #5ddba1;
+  --success-soft: #17251f;
+  --danger: #ff8a80;
+  --danger-soft: #2a1d20;
+  --warning: #ffd166;
+  --warning-soft: #2a2518;
+  --focus: #7df9ff;
   --content-width: 1180px;
   --control-height: 46px;
   font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
@@ -38,7 +38,7 @@ body {
 }
 
 a {
-  color: var(--brand-strong);
+  color: var(--ink);
 }
 
 button,
@@ -50,11 +50,24 @@ textarea {
 
 button {
   cursor: pointer;
+  color: #ffffff;
+  border: 1px solid var(--brand);
+  background: var(--brand);
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
+  border-style: dashed;
+  opacity: 1;
+}
+
+button:hover:not(:disabled) {
+  border-style: double;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 3px rgb(0 0 0 / 35%);
 }
 
 :focus-visible {
@@ -145,16 +158,16 @@ form button {
 .panel-navigation button,
 .button-secondary,
 .landing-actions .button-secondary {
-  color: var(--ink);
-  border-color: var(--line);
-  background: var(--surface);
+  color: #ffffff;
+  border-color: var(--brand);
+  background: var(--brand);
 }
 
 .main-navigation button:hover,
 .panel-navigation button:hover,
 .button-secondary:hover {
   border-color: var(--brand);
-  color: var(--brand-strong);
+  color: #ffffff;
 }
 
 .button-primary,
@@ -167,13 +180,13 @@ form button.button-primary {
 .button-primary:hover,
 .landing-actions .button-primary:hover,
 form button.button-primary:hover {
-  background: var(--brand-strong);
+  background: var(--brand);
 }
 
 .button-danger {
-  color: var(--danger);
-  border-color: #e5b8b3;
-  background: var(--danger-soft);
+  color: #ffffff;
+  border-color: var(--brand);
+  background: var(--brand);
 }
 
 .landing-view,
@@ -206,14 +219,14 @@ form button.button-primary:hover {
 
 .landing-copy > p:not(.eyebrow) {
   max-width: 570px;
-  color: var(--muted);
+  color: var(--ink);
   font-size: 18px;
   line-height: 1.6;
 }
 
 .eyebrow {
   margin: 0 0 10px;
-  color: var(--brand);
+  color: var(--ink);
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -231,7 +244,7 @@ form button.button-primary:hover {
 }
 
 .landing-aside .eyebrow {
-  color: #f0b29c;
+  color: #ffffff;
 }
 
 .landing-aside ul {
@@ -274,7 +287,7 @@ form h1,
 
 form p,
 .panel-heading p {
-  color: var(--muted);
+  color: var(--ink);
   line-height: 1.5;
 }
 
@@ -304,10 +317,16 @@ select {
   width: 100%;
   min-height: var(--control-height);
   padding: 9px 12px;
-  border: 1px solid #aebdb6;
+  border: 1px solid var(--line);
   border-radius: 5px;
   color: var(--ink);
-  background: white;
+  background: var(--surface);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #ffffff;
+  opacity: 1;
 }
 
 input:focus,
@@ -364,25 +383,29 @@ select:focus {
   padding: 12px 14px;
   border-left: 4px solid var(--brand);
   color: var(--ink);
-  background: #eaf4f1;
+  border-style: dotted;
+  background: var(--surface);
 }
 
 .mensaje--exito {
   border-color: var(--success);
-  color: var(--success);
+  color: var(--ink);
   background: var(--success-soft);
+  border-style: solid;
 }
 
 .mensaje--advertencia {
   border-color: var(--warning);
-  color: var(--warning);
+  color: var(--ink);
   background: var(--warning-soft);
+  border-style: dashed;
 }
 
 .mensaje--error {
   border-color: var(--danger);
-  color: var(--danger);
+  color: var(--ink);
   background: var(--danger-soft);
+  border-style: double;
 }
 
 .movement-table {
@@ -398,7 +421,7 @@ select:focus {
 }
 
 .movement-table th {
-  color: var(--muted);
+  color: var(--ink);
   font-size: 12px;
   text-transform: uppercase;
 }
@@ -406,7 +429,7 @@ select:focus {
 .site-footer {
   min-height: 88px;
   border-top: 1px solid var(--line);
-  color: var(--muted);
+  color: var(--ink);
   font-size: 14px;
 }
 
