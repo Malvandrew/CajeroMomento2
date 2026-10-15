@@ -5,6 +5,15 @@
 **Status**: Ready for planning
 **Input**: User description: "SPEC-001 Sistema Bancario Mi Plata: application for customer registration and login, customer and product management, banking operations, transfers, movement history, profile management, and credit-card installments."
 
+## Clarifications
+
+### Session 2026-10-15
+
+- Q: Cuando un cliente elimina su cuenta de Mi Plata, ¿qué debe ocurrir con sus productos y movimientos históricos? → A: Eliminar el perfil y sus productos, pero conservar los movimientos sin datos que identifiquen al cliente.
+- Q: ¿Debe el sistema impedir que las contraseñas puedan leerse en los datos retenidos de los clientes? → A: No; al ser un ejercicio académico, se permite guardar contraseñas legibles.
+- Q: ¿Debe el número de identificación ser único entre clientes, además del nombre de usuario? → A: Sí; tanto la identificación como el nombre de usuario deben ser únicos.
+- Q: Si el cliente borra los datos locales de Mi Plata o cambia de dispositivo, ¿debe poder recuperar su cuenta y sus movimientos? → A: No; los datos solo están disponibles en el mismo dispositivo y navegador, y no se recuperan si se borran.
+
 ## User Scenarios & Testing
 
 ### User Story 1 - Register and Access an Account (Priority: P1)
@@ -17,11 +26,12 @@ A prospective customer registers with their identity and contact details, then s
 
 **Acceptance Scenarios**:
 
-1. **Given** all required registration details are valid and the username is unused, **When** the customer submits registration with matching passwords, **Then** the customer is created and receives a clear success message.
-2. **Given** a username is already registered, **When** another customer submits it, **Then** registration is rejected without creating a duplicate customer.
+1. **Given** all required registration details are valid and both the identification number and username are unused, **When** the customer submits registration with matching passwords, **Then** the customer is created and receives a clear success message.
+2. **Given** an identification number or username is already registered, **When** another customer submits it, **Then** registration is rejected without creating a duplicate customer.
 3. **Given** a registered, unlocked customer, **When** they submit the correct username and password, **Then** they access their banking panel.
 4. **Given** a customer has failed login twice, **When** they submit an incorrect password again, **Then** the account is blocked and the interface reports that no attempts remain.
 5. **Given** an authenticated customer, **When** they sign out, **Then** they return to the public landing page and cannot access the banking panel without signing in again.
+6. **Given** a visitor opens registration or sign-in, **When** the credential fields are presented, **Then** the page identifies the application as an academic simulation and warns not to enter real banking credentials because saved passwords may be readable.
 
 ---
 
@@ -31,7 +41,6 @@ A customer reviews and updates their own profile and manages banking products as
 
 **Why this priority**: Customers need accurate profile information and access to their products to perform banking operations.
 
-**Independent Test**: Update profile details, change a password using the current password, and verify permitted customer-management actions and deletion confirmation.
 **Independent Test**: Update profile details, change a password using the current password, verify that another customer's record is inaccessible, and confirm own-record deletion.
 
 **Acceptance Scenarios**:
@@ -39,7 +48,7 @@ A customer reviews and updates their own profile and manages banking products as
 1. **Given** an authenticated customer, **When** they save valid profile changes, **Then** the updated details appear in the profile.
 2. **Given** an authenticated customer, **When** they submit the correct current password, a matching new password, and confirmation, **Then** the new password is accepted for subsequent sign-in.
 3. **Given** an authenticated customer, **When** they view or edit customer data, **Then** only their own record is accessible.
-4. **Given** an authenticated customer, **When** they request deletion of their own customer record and confirm, **Then** the record is deleted and cannot be used to sign in.
+4. **Given** an authenticated customer, **When** they confirm deletion of their own account, **Then** their profile and products are deleted, their transaction movements remain without identifying links, and they can no longer sign in.
 5. **Given** an authenticated customer, **When** they request deletion of their own customer record but cancel, **Then** the record remains unchanged.
 
 ---
@@ -59,7 +68,6 @@ A customer selects a banking product, sees its current balance, and makes deposi
 3. **Given** a savings account, **When** the customer requests a withdrawal beyond its available balance, **Then** the withdrawal is rejected and the balance is unchanged.
 4. **Given** a checking account, **When** the customer requests a withdrawal within the permitted overdraft limit, **Then** the withdrawal is completed and the resulting balance is shown.
 5. **Given** a zero, negative, or non-numeric amount, **When** the customer submits a deposit or withdrawal, **Then** the operation is rejected with a clear explanation and no balance change.
-6. **Given** a savings-account withdrawal that meets the funds rule, **When** the customer completes it, **Then** the applicable monthly interest is calculated and the resulting balance reflects the withdrawal and interest under the approved accrual rule.
 6. **Given** a savings-account withdrawal is the first valid withdrawal in a calendar month, **When** the customer completes it, **Then** 1.5% of the balance immediately before interest is credited before the withdrawal and the credited interest is shown.
 7. **Given** interest has already been credited to a savings account in the current calendar month, **When** the customer makes another valid withdrawal, **Then** no additional monthly interest is credited.
 
@@ -101,14 +109,19 @@ A customer reviews a credit-card transaction's monthly installment amount and us
 ### Edge Cases
 
 - A required registration field is blank, the username is duplicated, or the password confirmation differs.
+- A required registration field is blank, the identification number or username is duplicated, or the password confirmation differs.
 - Login is attempted for a nonexistent, locked, or already blocked customer.
 - A deposit or withdrawal amount is zero, negative, non-numeric, or exceeds the applicable funds limit.
 - A transfer destination is missing, does not exist, belongs to the source product, or is the same product as the source.
 - A transfer amount exceeds the source product's permitted funds; neither side may be partially updated.
 - A profile update attempts to use another customer's username.
+- A profile update attempts to use another customer's username.
+- A customer deletes their account; their products are removed while movement facts remain without links to the deleted customer or products.
 - A password change has an incorrect current password or mismatched new-password confirmation.
 - A credit-card installment count is less than one or the transaction amount is not positive.
 - Two operations are submitted against the same product before the displayed balance is refreshed; the system must not allow an invalid resulting balance.
+- Two operations are submitted against the same product before the displayed balance is refreshed; the system must not allow an invalid resulting balance.
+- A customer clears locally retained application data or changes devices; customer and movement data cannot be restored or accessed from the new device.
 
 ## Requirements
 
@@ -116,10 +129,10 @@ A customer reviews a credit-card transaction's monthly installment amount and us
 
 - **FR-001**: The landing page MUST provide navigation to sign-in and registration, institutional information, a footer, and social links.
 - **FR-002**: The registration flow MUST collect identification number, full name, mobile number, username, password, and password confirmation.
-- **FR-003**: The system MUST reject registration when a required field is missing, the username is already in use, or the password and confirmation do not match.
+- **FR-003**: The system MUST reject registration when a required field is missing, the identification number or username is already in use, or the password and confirmation do not match.
 - **FR-004**: The sign-in flow MUST validate the submitted username and password, display the number of attempts remaining after a failed attempt, and reset the failed-attempt count after a successful sign-in.
 - **FR-005**: The system MUST block sign-in for a customer after exactly three consecutive failed attempts and communicate the blocked state.
-- **FR-006**: Registration MUST create a customer's own record; an authenticated customer MUST be able to view, edit, and delete only their own record. The system MUST require explicit confirmation before deletion and MUST prevent access to other customers' records.
+- **FR-006**: Registration MUST create a customer's own record; an authenticated customer MUST be able to view, edit, and delete only their own record. The system MUST require explicit confirmation before deletion, remove the customer's profile and products after confirmation, retain movement facts without links to identifying customer or product records, and prevent access to other customers' records.
 - **FR-007**: An authenticated customer MUST be able to view the current balance of each product they are authorized to access.
 - **FR-008**: The system MUST accept a deposit only when its amount is numeric and greater than zero, update the selected product balance, and show the updated balance.
 - **FR-009**: At the first valid withdrawal in each calendar month, the system MUST calculate interest as 1.5% of the savings balance immediately before interest is credited, credit it before the withdrawal, and show the interest amount and resulting balance. It MUST NOT credit this monthly interest again on subsequent withdrawals in the same calendar month, and MUST reject any withdrawal that exceeds the post-credit available balance.
@@ -137,10 +150,13 @@ A customer reviews a credit-card transaction's monthly installment amount and us
 - **FR-021**: The banking experience MUST remain usable on desktop, tablet, and mobile screen sizes and MUST present clear success, error, and warning messages.
 - **FR-022**: The main panel MUST provide access to balance inquiry, deposits, withdrawals, movement history, transfers, and profile.
 - **FR-023**: When a customer signs out, the system MUST end access to the banking panel and return them to the public landing page; banking information MUST remain inaccessible until the customer signs in again.
+- **FR-024**: For this academic simulation, the system MAY retain passwords in readable form; it MUST disclose that a person with access to retained customer data may read them and MUST warn users not to enter real banking credentials.
+- **FR-025**: The system MUST make clear before registration that customer and movement data are available only on the same device and browser, and cannot be recovered if locally retained data is cleared or accessed from another device.
 
 ### Key Entities
 
 - **Customer**: A person identified by registration details and sign-in credentials; owns one or more banking products.
+- **Customer**: A person identified by a unique identification number and unique username, with sign-in credentials; owns one or more banking products.
 - **Banking Product**: A customer's financial product with an identifiable owner, product type, and current balance or credit transaction details.
 - **Savings Account**: A deposit product with a monthly interest rate and a no-negative-balance withdrawal rule.
 - **Checking Account**: A deposit product with no interest and an overdraft limit.
@@ -151,25 +167,27 @@ A customer reviews a credit-card transaction's monthly installment amount and us
 
 ### Measurable Outcomes
 
-- **SC-001**: In acceptance testing, 100% of valid registration cases create one customer, while missing fields, duplicate usernames, and mismatched passwords create none and produce actionable feedback.
+- **SC-001**: In acceptance testing, 100% of valid registration cases create one customer, while missing fields, duplicate identification numbers or usernames, and mismatched passwords create none and produce actionable feedback.
 - **SC-002**: In all login acceptance cases, the first two failed attempts show the correct remaining count and the third failed attempt blocks access.
 - **SC-003**: In all valid deposit, withdrawal, and transfer acceptance cases, displayed balances match the resulting operations; in all rejected cases, balances remain unchanged.
 - **SC-004**: Every completed movement in acceptance testing displays its date, time, type, and amount, and the complete history is ordered newest first.
 - **SC-005**: Customers can complete registration, sign-in, a basic account operation, and review of its history in under five minutes in a usability test without assistance.
 - **SC-006**: The primary banking journeys remain usable at desktop, tablet, and mobile viewport sizes with no blocking content overlap or inaccessible controls.
-- **SC-007**: Every valid credit-card installment scenario displays the applicable interest tier and a monthly installment amount consistent with the approved calculation rule.
 - **SC-007**: For installment counts of 1, 2, 3, 6, and 7, every credit-card scenario displays the specified interest tier and a monthly installment amount matching the simple-interest rule to two decimal places, including any final-installment rounding adjustment.
+- **SC-008**: 100% of registration and sign-in entry points display the academic-simulation and no-real-credentials warning before a customer enters credentials.
+- **SC-009**: 100% of registration entry points display the same-device data limitation and no-recovery warning before a customer creates an account.
 
 ## Assumptions
 
-- Each customer may own one or more savings accounts, checking accounts, or credit-card products; a customer can transfer only from products they are authorized to access.
-- Each customer may own one or more savings accounts, checking accounts, or credit-card products; a customer can transfer only from products they are authorized to access. Product management in this feature covers viewing, selecting, and using existing products. Opening and closing products are out of scope because their rules were not provided.
-- Each customer may own one or more savings accounts, checking accounts, or credit-card products; a customer can transfer only from products they are authorized to access.
+- Each customer may own one or more savings accounts, checking accounts, or credit-card products and may transfer only from products they own.
+- Product management covers viewing, selecting, and using existing products; opening and closing products are out of scope because their rules were not provided.
 - Transfer destinations are selected from existing products, and the customer reviews the amount and destination before confirming the transfer.
-- The overdraft allowance is calculated as 20% of the positive current balance immediately before the withdrawal; an account with a zero or negative balance has no additional overdraft allowance. This interpretation follows "20% sobre el saldo actual" and must be confirmed if the intended reference balance differs.
-- The overdraft allowance is calculated as 20% of the positive current balance immediately before the withdrawal; an account with a zero or negative balance has no additional overdraft allowance.
-- Currency is Colombian pesos (COP), based on the Spanish-language banking context; displayed monetary amounts use two decimal places where applicable.
-- The third failed sign-in attempt leaves the account blocked; account recovery or unlocking is outside this feature unless separately specified.
+- The overdraft allowance is 20% of the positive current balance immediately before withdrawal; an account with a zero or negative balance has no additional overdraft allowance.
+- Currency is Colombian pesos (COP), and monetary amounts are displayed to two decimal places where applicable.
+- The third consecutive failed sign-in attempt blocks the account; account recovery or unlocking is outside this feature.
 - The feature covers simulated customer, product, and movement management within Mi Plata; external payment processing, settlement with other financial institutions, and physical cash handling are out of scope.
-- Deleting a customer record also removes its products and related movement history from the active application; recovery after deletion is not included.
+- Deleting a customer removes their profile and products but retains movement facts (date, time, type, and amount) without links to the deleted customer or products; account recovery after deletion is not included.
 - Project-wide technical constraints and the required object-oriented design remain governed by the project constitution and are not repeated as implementation instructions in this user-facing specification.
+- This is an academic simulation, not a real banking service; users must not enter real credentials because passwords may be readable in retained customer data.
+- Customer and movement data remain available only on the device and browser where the customer used Mi Plata; clearing locally retained data permanently removes access to those records, and no recovery process is provided.
+- This is an academic simulation, not a real banking service; users must not enter real credentials because passwords may be readable in retained customer data.
