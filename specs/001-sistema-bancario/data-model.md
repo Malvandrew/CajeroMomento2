@@ -25,7 +25,6 @@ The application persists one serialized state value in localStorage. The state c
 - `clienteId`: owning customer identifier while the product exists.
 - `tipo`: savings account, checking account, or credit card.
 - **Relationships**: one customer owns three initial products. Transfers reference distinct source and destination products while those products exist.
-- **Initial state**: the two account balances and card limit start at zero.
 - **Initial state**: account balances and card limit equal the customer's non-negative values supplied at registration.
 
 ### Cuenta
@@ -59,9 +58,7 @@ The application persists one serialized state value in localStorage. The state c
 ### TransaccionTarjeta
 
 - `id`, `tarjetaId`, `montoOriginalCentavos`, `numeroCuotas`, `tasaMensual`, `totalAPagarCentavos`, and per-installment amounts in centavos.
-- **Rules**: amount must be positive; installment count must be at least one. Rate is 0% for 1-2 installments, 1.9% monthly for 3-6, and 2.3% monthly for 7 or more. Interest is simple on the original amount: `total = principal + principal * monthlyRate * installmentCount`. Round payable to cents; divide into installments and apply any rounding remainder to the final installment.
 - **Rules**: amount must be positive, installment count must be at least one, and the original purchase amount must not exceed available credit. An accepted purchase increases used credit by its original amount. Rate is 0% for 1-2 installments, 1.9% monthly for 3-6, and 2.3% monthly for 7 or more. Interest is simple on the original amount: `total = principal + principal * monthlyRate * installmentCount`. Round payable to cents; divide into installments and apply any rounding remainder to the final installment. Card repayments and credit-limit restoration are out of scope.
-- **Scope note**: the spec defines installment calculation and display but no credit-limit authorization rule; do not infer one.
 
 ### Movimiento
 

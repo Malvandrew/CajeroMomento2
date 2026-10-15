@@ -38,7 +38,6 @@ state in `localStorage`. No server, database, or external storage service is in 
 
 - **Spec First**: The active spec is clarified and checklist-validated. Implementation remains blocked until this plan is approved and tasks are generated.
 - **Object-Oriented Design**: Use simple domain classes for `Cliente`, `ProductoFinanciero`, `Cuenta`, `CuentaAhorros`, `CuentaCorriente`, `TarjetaCredito`, `TransaccionTarjeta`, and `Movimiento`. Keep business rules out of DOM event handlers. `Cuenta` is the base for deposit-account types; the credit card is a distinct product under the shared financial-product abstraction.
-- **Banking Rules First**: Enforce cash-withdrawal savings interest, checking overdraft boundaries, simple-interest card installments, and all-or-nothing transfers.
 - **Banking Rules First**: Enforce cash-withdrawal savings interest, checking overdraft boundaries, simple-interest card installments, card-credit authorization, and all-or-nothing transfers.
 - **Local Storage Only**: Persist application state exclusively in `localStorage`; add no network or external storage dependencies.
 - **Simplicity for Learning**: Prefer explicit validation and short methods; no framework, package dependency, advanced pattern, or metaprogramming is needed.

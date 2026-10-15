@@ -32,16 +32,13 @@ Open `http://localhost:8000` in the browser. Stop the server with Ctrl+C.
 
 1. Open registration. Confirm the academic-demo/plaintext-password warning and same-device/no-recovery warning appear before credential entry.
 2. Register with unique identification and username and non-negative starting values. Confirm the chosen savings/checking balances and card credit limit are applied; positive starting balances appear in history as consignations.
-2. Register with unique identification and username, selecting separate non-negative balances for savings/checking and a non-negative card limit. Confirm each value is applied and positive opening balances appear as consignation movements.
 3. Attempt registration with negative or non-numeric initial values, then with a duplicate identification or username. Confirm each invalid registration is rejected without creating a customer or products.
-3. Attempt registration with the same identification or username. Confirm it is rejected and no extra customer/products are created.
 4. Sign in with an incorrect password twice and verify the remaining-attempt counter. Fail a third time and confirm access is blocked; use a separate customer to verify successful sign-in resets consecutive failures.
 5. Make a positive deposit. Confirm the displayed balance increases by exactly the deposit amount. Submit zero, negative, and non-numeric values and confirm no state changes.
 6. On savings, perform the first accepted cash withdrawal in a calendar month. Confirm 1.5% of the pre-credit balance is credited first. Transfer from savings before a cash withdrawal and confirm the transfer itself does not trigger or consume the monthly interest credit.
 7. On checking, test withdrawals at and beyond the 20% overdraft boundary. Confirm no interest is applied and rejected withdrawals leave the balance unchanged.
 8. Transfer between two distinct products and to another customer's product. Confirm both sides and history update on success; try same-product, nonexistent-destination, and insufficient-funds cases and confirm no partial update.
 9. Check credit-card installment counts 1, 2, 3, 6, and 7. Confirm the specified rate tier, simple-interest total, two-decimal display, and final-installment remainder.
-9. Check credit-card installment counts 1, 2, 3, 6, and 7. Confirm the specified rate tier, simple-interest total, two-decimal display, and final-installment remainder. Try a purchase above available credit and confirm it creates no transaction or limit change.
 10. Edit profile and change password with correct and incorrect current-password cases. Confirm the username and identification uniqueness rules remain enforced.
 11. Delete a customer after confirmation. Confirm the profile/products disappear, retained movement facts have no customer/product links, and the deleted credentials cannot sign in.
 12. Resize to desktop, tablet, and mobile widths. Confirm primary controls, feedback, and history remain readable and usable without blocking overlap.
