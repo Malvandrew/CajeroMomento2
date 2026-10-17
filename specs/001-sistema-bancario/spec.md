@@ -20,99 +20,99 @@
 
 ## User Scenarios & Testing
 
-### User Story 1 - Register and Access an Account (Priority: P1)
+### Historia de Usuario 1 - Registrarse e iniciar sesión (Prioridad: P1)
 
-A prospective customer registers with their identity and contact details, then signs in to access their banking profile. This gives customers a secure, personalized starting point for all banking tasks.
+Una persona interesada en ser cliente se registra con sus datos de identidad y contacto, y luego inicia sesión para acceder a su perfil bancario. Esto le brinda un punto de partida personalizado para realizar sus operaciones bancarias.
 
-**Why this priority**: Registration and authentication establish customer identity and gate access to personal financial information.
+**Por qué esta prioridad**: El registro y la autenticación establecen la identidad del cliente y controlan el acceso a su información financiera personal.
 
-**Independent Test**: Register a new customer, sign in with valid credentials, then verify that an incorrect password is rejected and the account is blocked after the third failed attempt.
+**Prueba independiente**: Registrar un cliente nuevo e iniciar sesión con credenciales válidas. Después, comprobar que se rechace una contraseña incorrecta y que la cuenta se bloquee tras el tercer intento fallido.
 
-**Acceptance Scenarios**:
+**Escenarios de aceptación**:
 
-1. **Given** all required registration details and non-negative numeric starting values are valid and both the identification number and username are unused, **When** the customer submits registration, **Then** the customer is created with one savings account and one checking account at their selected balances, one credit card at their selected limit, and positive initial account balances recorded as consignation movements.
-2. **Given** an initial balance or card limit is negative or non-numeric, **When** the customer submits registration, **Then** registration is rejected and no customer or products are created.
-3. **Given** an identification number or username is already registered, **When** another customer submits it, **Then** registration is rejected without creating a duplicate customer.
-4. **Given** a registered, unlocked customer, **When** they submit the correct username and password, **Then** they access their banking panel.
-5. **Given** a customer has failed login twice, **When** they submit an incorrect password again, **Then** the account is blocked and the interface reports that no attempts remain.
-6. **Given** an authenticated customer, **When** they sign out, **Then** they return to the public landing page and cannot access the banking panel without signing in again.
-7. **Given** a visitor opens registration or sign-in, **When** the credential fields are presented, **Then** the page identifies the application as an academic simulation and warns not to enter real banking credentials because saved passwords may be readable.
-
----
-
-### User Story 2 - Manage Customer Details and Products (Priority: P2)
-
-A customer reviews and updates their own profile and manages banking products associated with their account. Each customer can only view, edit, or delete their own customer record.
-
-**Why this priority**: Customers need accurate profile information and access to their products to perform banking operations.
-
-**Independent Test**: Update profile details, change a password using the current password, verify that another customer's record is inaccessible, and confirm own-record deletion.
-
-**Acceptance Scenarios**:
-
-1. **Given** an authenticated customer, **When** they save valid profile changes, **Then** the updated details appear in the profile.
-2. **Given** an authenticated customer, **When** they submit the correct current password, a matching new password, and confirmation, **Then** the new password is accepted for subsequent sign-in.
-3. **Given** an authenticated customer, **When** they view or edit customer data, **Then** only their own record is accessible.
-4. **Given** an authenticated customer, **When** they confirm deletion of their own account, **Then** their profile and products are deleted, their transaction movements remain without identifying links, and they can no longer sign in.
-5. **Given** an authenticated customer, **When** they request deletion of their own customer record but cancel, **Then** the record remains unchanged.
+1. **Dado** que todos los datos obligatorios de registro y los valores iniciales numéricos no negativos son válidos, y que la identificación y el nombre de usuario aún no están registrados, **Cuando** la persona envía el formulario de registro, **Entonces** se crea el cliente con una cuenta de ahorros y una cuenta corriente con los saldos elegidos, una tarjeta de crédito con el cupo elegido y movimientos de consignación para los saldos iniciales positivos.
+2. **Dado** que un saldo inicial o el cupo de la tarjeta es negativo o no numérico, **Cuando** la persona envía el formulario de registro, **Entonces** se rechaza el registro y no se crean el cliente ni sus productos.
+3. **Dado** que una identificación o un nombre de usuario ya está registrado, **Cuando** otra persona intenta registrarlo, **Entonces** se rechaza el registro y no se crea un cliente duplicado.
+4. **Dado** un cliente registrado y desbloqueado, **Cuando** ingresa su nombre de usuario y contraseña correctos, **Entonces** accede al panel bancario.
+5. **Dado** que un cliente ya falló el inicio de sesión dos veces, **Cuando** vuelve a ingresar una contraseña incorrecta, **Entonces** se bloquea la cuenta y la interfaz informa que no quedan intentos.
+6. **Dado** un cliente autenticado, **Cuando** cierra sesión, **Entonces** vuelve a la página pública de inicio y no puede acceder al panel bancario sin iniciar sesión nuevamente.
+7. **Dado** que una persona visitante abre el registro o el inicio de sesión, **Cuando** se muestran los campos de credenciales, **Entonces** la página identifica la aplicación como una simulación académica y advierte que no se ingresen credenciales bancarias reales porque las contraseñas guardadas podrían ser legibles.
 
 ---
 
-### User Story 3 - View Balances and Perform Account Operations (Priority: P1)
+### Historia de Usuario 2 - Administrar los datos y productos del cliente (Prioridad: P2)
 
-A customer selects a banking product, sees its current balance, and makes deposits or withdrawals under that product's rules.
+Un cliente consulta y actualiza su propio perfil, y administra los productos bancarios asociados a su cuenta. Cada cliente solo puede consultar, editar o eliminar su propio registro.
 
-**Why this priority**: Balance inquiry and basic account operations are the central value of the banking service.
+**Por qué esta prioridad**: Los clientes necesitan mantener sus datos correctos y acceder a sus productos para realizar operaciones bancarias.
 
-**Independent Test**: On separate savings and checking products, perform valid deposits and withdrawals, then verify the displayed balances and reject invalid amounts or operations that exceed the permitted funds.
+**Prueba independiente**: Actualizar los datos del perfil, cambiar la contraseña usando la contraseña actual, comprobar que el registro de otro cliente no sea accesible y confirmar la eliminación del registro propio.
 
-**Acceptance Scenarios**:
+**Escenarios de aceptación**:
 
-1. **Given** a customer owns a product, **When** they select it for balance inquiry, **Then** its current balance is displayed.
-2. **Given** a positive numeric deposit amount, **When** the customer confirms the deposit, **Then** the product balance increases by that amount and the updated balance is shown.
-3. **Given** a savings account, **When** the customer requests a withdrawal beyond its available balance, **Then** the withdrawal is rejected and the balance is unchanged.
-4. **Given** a checking account, **When** the customer requests a withdrawal within the permitted overdraft limit, **Then** the withdrawal is completed and the resulting balance is shown.
-5. **Given** a zero, negative, or non-numeric amount, **When** the customer submits a deposit or withdrawal, **Then** the operation is rejected with a clear explanation and no balance change.
-6. **Given** a savings-account withdrawal is the first valid withdrawal in a calendar month, **When** the customer completes it, **Then** 1.5% of the balance immediately before interest is credited before the withdrawal and the credited interest is shown.
-7. **Given** interest has already been credited to a savings account in the current calendar month, **When** the customer makes another valid withdrawal, **Then** no additional monthly interest is credited.
+1. **Dado** un cliente autenticado, **Cuando** guarda cambios válidos en su perfil, **Entonces** los datos actualizados aparecen en el perfil.
+2. **Dado** un cliente autenticado, **Cuando** ingresa la contraseña actual correcta, una nueva contraseña y su confirmación coincidentes, **Entonces** la nueva contraseña se acepta para los siguientes inicios de sesión.
+3. **Dado** un cliente autenticado, **Cuando** consulta o edita datos de clientes, **Entonces** solo puede acceder a su propio registro.
+4. **Dado** un cliente autenticado, **Cuando** confirma la eliminación de su propia cuenta, **Entonces** se eliminan su perfil y sus productos, se conservan sus movimientos sin vínculos que lo identifiquen y ya no puede iniciar sesión.
+5. **Dado** un cliente autenticado, **Cuando** solicita eliminar su propio registro pero cancela la acción, **Entonces** el registro permanece sin cambios.
 
 ---
 
-### User Story 4 - Transfer Funds and Review Movements (Priority: P1)
+### Historia de Usuario 3 - Consultar saldos y realizar operaciones en las cuentas (Prioridad: P1)
 
-A customer transfers funds between their own products or to another customer's product and reviews a dated history of financial movements.
+Un cliente selecciona un producto bancario, consulta su saldo actual y realiza consignaciones o retiros de acuerdo con las reglas de ese producto.
 
-**Why this priority**: Transfers and an auditable movement history let customers move and verify their funds.
+**Por qué esta prioridad**: Consultar saldos y realizar operaciones básicas son el valor central del servicio bancario.
 
-**Independent Test**: Transfer funds between two distinct owned products and to another customer's product; verify both balances, reject a transfer to the same product, and confirm the movement history is ordered newest first.
+**Prueba independiente**: En cuentas de ahorros y corrientes distintas, realizar consignaciones y retiros válidos; después, comprobar los saldos mostrados y rechazar montos inválidos u operaciones que excedan los fondos permitidos.
 
-**Acceptance Scenarios**:
+**Escenarios de aceptación**:
 
-1. **Given** two distinct products exist and the source has sufficient permitted funds, **When** the customer confirms a transfer, **Then** the source and destination balances are updated and the transfer is recorded.
-2. **Given** the source and destination refer to the same product, **When** the customer submits a transfer, **Then** the transfer is rejected and no balance changes.
-3. **Given** the destination product does not exist or the source cannot cover the transfer under its product rules, **When** the customer confirms the transfer, **Then** the transfer is rejected without changing either balance.
-4. **Given** multiple movements exist, **When** the customer opens history, **Then** movements appear in descending date and time order with their date, time, type, and value.
-5. **Given** a customer transfers money from a savings account before making a cash withdrawal that month, **When** the transfer completes, **Then** the source balance is debited without crediting monthly interest, and the later first cash withdrawal remains eligible to trigger that month's interest.
+1. **Dado** que un cliente es titular de un producto, **Cuando** lo selecciona para consultar el saldo, **Entonces** se muestra su saldo actual.
+2. **Dado** un monto de consignación numérico y positivo, **Cuando** el cliente confirma la consignación, **Entonces** el saldo del producto aumenta en ese monto y se muestra el saldo actualizado.
+3. **Dada** una cuenta de ahorros, **Cuando** el cliente solicita un retiro que supera el saldo disponible, **Entonces** se rechaza el retiro y el saldo permanece sin cambios.
+4. **Dada** una cuenta corriente, **Cuando** el cliente solicita un retiro dentro del límite de sobregiro permitido, **Entonces** se completa el retiro y se muestra el saldo resultante.
+5. **Dado** un monto igual a cero, negativo o no numérico, **Cuando** el cliente envía una consignación o un retiro, **Entonces** se rechaza la operación con una explicación clara y el saldo no cambia.
+6. **Dado** que un retiro de una cuenta de ahorros es el primer retiro válido del mes calendario, **Cuando** el cliente lo completa, **Entonces** se acredita el 1,5 % del saldo inmediatamente antes de acreditar el interés, antes de realizar el retiro, y se muestra el interés acreditado.
+7. **Dado** que ya se acreditó interés a una cuenta de ahorros durante el mes calendario actual, **Cuando** el cliente realiza otro retiro válido, **Entonces** no se acredita interés mensual adicional.
 
 ---
 
-### User Story 5 - Review Credit-Card Installments and Use the Banking Site (Priority: P2)
+### Historia de Usuario 4 - Transferir fondos y consultar movimientos (Prioridad: P1)
 
-A customer reviews a credit-card transaction's monthly installment amount and uses the banking experience across desktop, tablet, and mobile layouts.
+Un cliente transfiere fondos entre sus propios productos o al producto de otro cliente, y consulta un historial fechado de sus movimientos financieros.
 
-**Why this priority**: Clear installment information supports informed credit use, while responsive layouts make core banking tasks available on common devices.
+**Por qué esta prioridad**: Las transferencias y un historial verificable permiten a los clientes mover y revisar sus fondos.
 
-**Independent Test**: Check installment displays for terms in each interest tier and complete a primary banking journey at desktop, tablet, and mobile viewport sizes.
+**Prueba independiente**: Transferir fondos entre dos productos propios distintos y hacia un producto de otro cliente; comprobar ambos saldos, rechazar una transferencia al mismo producto y confirmar que el historial ordena los movimientos del más reciente al más antiguo.
 
-**Acceptance Scenarios**:
+**Escenarios de aceptación**:
 
-1. **Given** a credit-card transaction with 1 or 2 installments, **When** the customer requests its payment schedule, **Then** the 0% interest tier and monthly installment amount are displayed.
-2. **Given** a credit-card transaction with 3 or 6 installments, **When** the customer requests its payment schedule, **Then** the 1.9% monthly interest tier and monthly installment amount are displayed.
-3. **Given** a credit-card transaction with 7 or more installments, **When** the customer requests its payment schedule, **Then** the 2.3% monthly interest tier and monthly installment amount are displayed.
-4. **Given** the customer opens the site on desktop, tablet, or mobile, **When** they navigate to a primary banking task, **Then** its controls and feedback remain readable and usable.
-5. **Given** a user opens the landing page, **When** they select sign-in or registration, **Then** they reach the corresponding flow; institutional information, navigation, footer, and social links are available.
-6. **Given** a credit card has available credit equal to or greater than a purchase, **When** the customer confirms the purchase, **Then** the transaction is accepted and its principal reduces the available credit.
-7. **Given** a purchase exceeds the card's available credit, **When** the customer attempts the transaction, **Then** it is rejected without creating a card transaction or changing the available credit.
+1. **Dado** que existen dos productos distintos y el producto de origen tiene fondos permitidos suficientes, **Cuando** el cliente confirma una transferencia, **Entonces** se actualizan los saldos de origen y destino y se registra la transferencia.
+2. **Dado** que el producto de origen y el de destino son el mismo, **Cuando** el cliente envía una transferencia, **Entonces** se rechaza la transferencia y ningún saldo cambia.
+3. **Dado** que el producto de destino no existe o que el producto de origen no puede cubrir la transferencia según sus reglas, **Cuando** el cliente confirma la transferencia, **Entonces** se rechaza sin cambiar ninguno de los saldos.
+4. **Dado** que existen varios movimientos, **Cuando** el cliente abre el historial, **Entonces** los movimientos aparecen ordenados por fecha y hora del más reciente al más antiguo, e incluyen fecha, hora, tipo y valor.
+5. **Dado** que un cliente transfiere dinero desde una cuenta de ahorros antes de realizar su primer retiro en efectivo del mes, **Cuando** se completa la transferencia, **Entonces** se debita el saldo de origen sin acreditar el interés mensual, y el primer retiro posterior en efectivo sigue teniendo derecho a generar el interés de ese mes.
+
+---
+
+### Historia de Usuario 5 - Consultar cuotas de la tarjeta y usar el sitio bancario (Prioridad: P2)
+
+Un cliente consulta el valor de la cuota mensual de una compra con tarjeta de crédito y utiliza la experiencia bancaria desde diseños de escritorio, tableta y móvil.
+
+**Por qué esta prioridad**: La información clara sobre las cuotas ayuda a tomar decisiones informadas sobre el crédito, y los diseños adaptables permiten realizar las operaciones bancarias principales desde dispositivos comunes.
+
+**Prueba independiente**: Comprobar los valores de las cuotas para plazos de cada rango de interés y completar un recorrido bancario principal en tamaños de pantalla de escritorio, tableta y móvil.
+
+**Escenarios de aceptación**:
+
+1. **Dada** una compra con tarjeta de crédito de 1 o 2 cuotas, **Cuando** el cliente consulta su plan de pagos, **Entonces** se muestran el rango de interés del 0 % y el valor de la cuota mensual.
+2. **Dada** una compra con tarjeta de crédito de 3 o 6 cuotas, **Cuando** el cliente consulta su plan de pagos, **Entonces** se muestran el rango de interés mensual del 1,9 % y el valor de la cuota mensual.
+3. **Dada** una compra con tarjeta de crédito de 7 cuotas o más, **Cuando** el cliente consulta su plan de pagos, **Entonces** se muestran el rango de interés mensual del 2,3 % y el valor de la cuota mensual.
+4. **Dado** que el cliente abre el sitio desde un equipo de escritorio, una tableta o un móvil, **Cuando** navega a una operación bancaria principal, **Entonces** sus controles y mensajes siguen siendo legibles y utilizables.
+5. **Dado** que una persona abre la página de inicio, **Cuando** selecciona iniciar sesión o registrarse, **Entonces** llega al flujo correspondiente y puede consultar la información institucional, la navegación, el pie de página y los enlaces a redes sociales.
+6. **Dado** que una tarjeta de crédito tiene un cupo disponible igual o superior al valor de una compra, **Cuando** el cliente confirma la compra, **Entonces** se acepta la transacción y su valor original reduce el cupo disponible.
+7. **Dado** que una compra supera el cupo disponible de la tarjeta, **Cuando** el cliente intenta realizarla, **Entonces** se rechaza sin crear una transacción ni cambiar el cupo disponible.
 
 ### Edge Cases
 
