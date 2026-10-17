@@ -8,13 +8,14 @@ Modified principles:
 Added sections: SemVer amendment policy and compliance review expectations under Governance
 Removed sections: None; prior requirements were reorganized under the active scaffold
 Follow-up TODOs: None
+- Amendment 2026-10-17: Product identity changed to Plata First at the user's explicit request; no principles or banking rules changed.
 -->
 # CajeroMomento2 Constitution
 
 ## Core Principles
 
 ### I. Spec-First Development (NON-NEGOTIABLE)
-La aplicación web bancaria Mi Plata se desarrollará mediante el flujo obligatorio:
+La aplicación web bancaria Plata First se desarrollará mediante el flujo obligatorio:
 Spec → Plan → Tasks → Implementación. Ninguna funcionalidad se implementará a partir
 de prompts ambiguos o requisitos incompletos. Antes de implementar, la SPEC deberá
 definir objetivo, alcance, reglas de negocio, criterios de aceptación, casos límite y
@@ -110,7 +111,7 @@ La versión seguirá SemVer: MAJOR para cambios incompatibles que eliminen o red
 reglas; MINOR para principios o secciones nuevos y ampliaciones materiales; PATCH
 para aclaraciones y cambios no semánticos.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-15
+**Version**: 1.0.1 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-17
 coherencia visual con el sistema.
 
 ## Governance

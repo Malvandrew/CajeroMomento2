@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2300" height="2240" viewBox="0 0 2300 2240">
+  <defs>
+    <marker id="inheritance" markerWidth="22" markerHeight="22" refX="20" refY="11" orient="auto">
+      <path d="M 1 1 L 21 11 L 1 21 Z" fill="#ffffff" stroke="#315b56" stroke-width="2" />
+    </marker>
+    <style>
+      text { font-family: "Avenir Next", Arial, sans-serif; fill: #183c38; }
+      .title { font-size: 58px; font-weight: 800; }
+      .subtitle { font-size: 27px; fill: #5d7771; }
+      .class-name { font-size: 34px; font-weight: 750; fill: #ffffff; }
+      .stereotype { font-size: 21px; font-weight: 600; fill: #e5f1ed; }
+      .member { font-size: 23px; }
+      .method { font-size: 22px; font-weight: 600; }
+      .relation { font-size: 21px; font-weight: 700; fill: #315b56; }
+      .note-title { font-size: 23px; font-weight: 750; }
+      .note { font-size: 21px; fill: #526d67; }
+      .class-box { fill: #ffffff; stroke: #b7c9c3; stroke-width: 2.5; }
+      .divider { stroke: #d9e4df; stroke-width: 2; }
+      .association { fill: none; stroke: #50716b; stroke-width: 3; }
+      .generalization { fill: none; stroke: #315b56; stroke-width: 3.5; }
+    </style>
+  </defs>
+
+  <rect width="2300" height="2240" fill="#f2f6f3" />
+  <path d="M 75 132 H 2225" stroke="#d7e3dd" stroke-width="2" />
+  <text x="1150" y="78" text-anchor="middle" class="title">Diagrama de clases UML</text>
+  <text x="1150" y="117" text-anchor="middle" class="subtitle">Modelo del sistema bancario Plata First · atributos, operaciones y relaciones</text>
+
+  <!-- Relaciones: las puntas triangulares señalan la superclase. -->
+  <path d="M 675 350 H 875" class="association" />
+  <path d="M 1625 390 H 1475" class="generalization" marker-end="url(#inheritance)" />
+  <path d="M 1175 650 V 510" class="generalization" marker-end="url(#inheritance)" />
+  <path d="M 800 1250 V 1170 H 1070 V 920" class="generalization" marker-end="url(#inheritance)" />
+  <path d="M 1550 1250 V 1170 H 1280 V 920" class="generalization" marker-end="url(#inheritance)" />
+  <path d="M 930 485 L 760 595 V 835 H 675" class="association" />
+  <path d="M 1925 670 V 800" class="association" />
+
+  <!-- Cliente -->
+  <g>
+    <rect x="75" y="190" width="600" height="480" rx="14" class="class-box" />
+    <rect x="75" y="190" width="600" height="70" rx="14" fill="#176d61" />
+    <rect x="75" y="235" width="600" height="25" fill="#176d61" />
+    <text x="105" y="219" class="stereotype">&lt;&lt;entidad&gt;&gt;</text>
+    <text x="105" y="249" class="class-name">Cliente</text>
+    <text x="105" y="302" class="member">+ id: String</text>
+    <text x="105" y="334" class="member">+ numeroIdentificacion: String</text>
+    <text x="105" y="366" class="member">+ nombreCompleto: String</text>
+    <text x="105" y="398" class="member">+ celular: String</text>
+    <text x="105" y="430" class="member">+ usuario: String</text>
+    <text x="105" y="462" class="member">+ contrasena: String</text>
+    <text x="105" y="494" class="member">+ intentosFallidos: Number</text>
+    <text x="105" y="526" class="member">+ bloqueado: Boolean</text>
+    <text x="105" y="558" class="member">+ productoIds: String[]</text>
+    <line x1="95" y1="580" x2="655" y2="580" class="divider" />
+    <text x="105" y="614" class="method">+ registrarIntentoFallido()</text>
+    <text x="105" y="645" class="method">+ registrarAccesoCorrecto() · agregarProducto()</text>
+  </g>
+
+  <!-- Producto financiero -->
+  <g>
+    <rect x="875" y="190" width="600" height="320" rx="14" class="class-box" />
+    <rect x="875" y="190" width="600" height="70" rx="14" fill="#285a72" />
+    <rect x="875" y="235" width="600" height="25" fill="#285a72" />
+    <text x="905" y="219" class="stereotype">&lt;&lt;clase base&gt;&gt;</text>
+    <text x="905" y="249" class="class-name">ProductoFinanciero</text>
+    <text x="905" y="310" class="member">+ id: String</text>
+    <text x="905" y="346" class="member">+ clienteId: String</text>
+    <text x="905" y="382" class="member">+ tipo: ahorros | corriente | credito</text>
+  </g>
+
+  <!-- Tarjeta de crédito -->
+  <g>
+    <rect x="1625" y="190" width="600" height="480" rx="14" class="class-box" />
+    <rect x="1625" y="190" width="600" height="70" rx="14" fill="#b84e42" />
+    <rect x="1625" y="235" width="600" height="25" fill="#b84e42" />
+    <text x="1655" y="219" class="stereotype">&lt;&lt;producto financiero&gt;&gt;</text>
+    <text x="1655" y="249" class="class-name">TarjetaCredito</text>
+    <text x="1655" y="310" class="member">+ limiteCreditoCentavos: Number</text>
+    <text x="1655" y="346" class="member">+ creditoUtilizadoCentavos: Number</text>
+    <line x1="1645" y1="374" x2="2205" y2="374" class="divider" />
+    <text x="1655" y="416" class="method">+ obtenerCreditoDisponibleCentavos()</text>
+    <text x="1655" y="452" class="method">+ autorizarCompra(montoCentavos)</text>
+    <text x="1655" y="510" class="note">Hereda id, clienteId y tipo</text>
+  </g>
+
+  <!-- Cuenta -->
+  <g>
+    <rect x="875" y="650" width="600" height="270" rx="14" class="class-box" />
+    <rect x="875" y="650" width="600" height="70" rx="14" fill="#397b73" />
+    <rect x="875" y="695" width="600" height="25" fill="#397b73" />
+    <text x="905" y="679" class="stereotype">&lt;&lt;clase base&gt;&gt;</text>
+    <text x="905" y="709" class="class-name">Cuenta</text>
+    <text x="905" y="770" class="member">+ saldoCentavos: Number</text>
+    <line x1="895" y1="792" x2="1455" y2="792" class="divider" />
+    <text x="905" y="834" class="method">+ consignar(montoCentavos)</text>
+  </g>
+
+  <!-- Movimiento -->
+  <g>
+    <rect x="75" y="800" width="600" height="400" rx="14" class="class-box" />
+    <rect x="75" y="800" width="600" height="70" rx="14" fill="#93612a" />
+    <rect x="75" y="845" width="600" height="25" fill="#93612a" />
+    <text x="105" y="829" class="stereotype">&lt;&lt;registro bancario&gt;&gt;</text>
+    <text x="105" y="859" class="class-name">Movimiento</text>
+    <text x="105" y="920" class="member">+ id: String · fecha: String · hora: String</text>
+    <text x="105" y="956" class="member">+ tipo: consignacion | retiro | transferencia</text>
+    <text x="105" y="992" class="member">+ montoCentavos: Number</text>
+    <text x="105" y="1028" class="member">+ productoOrigenId: String | null</text>
+    <text x="105" y="1064" class="member">+ productoDestinoId: String | null</text>
+    <line x1="95" y1="1086" x2="655" y2="1086" class="divider" />
+    <text x="105" y="1124" class="note">Referencia cuentas por identificador;</text>
+    <text x="105" y="1156" class="note">origen y destino pueden ser opcionales.</text>
+  </g>
+
+  <!-- Transacción de tarjeta -->
+  <g>
+    <rect x="1625" y="800" width="600" height="400" rx="14" class="class-box" />
+    <rect x="1625" y="800" width="600" height="70" rx="14" fill="#9a5260" />
+    <rect x="1625" y="845" width="600" height="25" fill="#9a5260" />
+    <text x="1655" y="829" class="stereotype">&lt;&lt;compra con tarjeta&gt;&gt;</text>
+    <text x="1655" y="859" class="class-name">TransaccionTarjeta</text>
+    <text x="1655" y="920" class="member">+ id: String · tarjetaId: String</text>
+    <text x="1655" y="956" class="member">+ montoOriginalCentavos: Number</text>
+    <text x="1655" y="992" class="member">+ numeroCuotas: Number</text>
+    <text x="1655" y="1028" class="member">+ tasaMensual: Number</text>
+    <text x="1655" y="1064" class="member">+ totalAPagarCentavos: Number</text>
+    <text x="1655" y="1100" class="member">+ cuotasCentavos: Number[]</text>
+    <text x="1655" y="1136" class="member">+ fecha: String · hora: String</text>
+  </g>
+
+  <!-- Cuenta de ahorros -->
+  <g>
+    <rect x="500" y="1250" width="600" height="380" rx="14" class="class-box" />
+    <rect x="500" y="1250" width="600" height="70" rx="14" fill="#176d61" />
+    <rect x="500" y="1295" width="600" height="25" fill="#176d61" />
+    <text x="530" y="1279" class="stereotype">&lt;&lt;cuenta&gt;&gt;</text>
+    <text x="530" y="1309" class="class-name">CuentaAhorros</text>
+    <text x="530" y="1370" class="member">+ tasaInteresMensual: Number</text>
+    <text x="530" y="1406" class="member">+ mesInteresAcreditado: String | null</text>
+    <line x1="520" y1="1428" x2="1080" y2="1428" class="divider" />
+    <text x="530" y="1470" class="method">+ retirarEfectivo(monto, fecha)</text>
+    <text x="530" y="1524" class="note">Hereda saldo y consignar() de Cuenta</text>
+  </g>
+
+  <!-- Cuenta corriente -->
+  <g>
+    <rect x="1250" y="1250" width="600" height="380" rx="14" class="class-box" />
+    <rect x="1250" y="1250" width="600" height="70" rx="14" fill="#397b73" />
+    <rect x="1250" y="1295" width="600" height="25" fill="#397b73" />
+    <text x="1280" y="1279" class="stereotype">&lt;&lt;cuenta&gt;&gt;</text>
+    <text x="1280" y="1309" class="class-name">CuentaCorriente</text>
+    <text x="1280" y="1370" class="member">+ porcentajeSobregiro: Number</text>
+    <line x1="1270" y1="1392" x2="1830" y2="1392" class="divider" />
+    <text x="1280" y="1434" class="method">+ obtenerLimiteSobregiroCentavos()</text>
+    <text x="1280" y="1470" class="method">+ retirarEfectivo(montoCentavos)</text>
+    <text x="1280" y="1524" class="note">Hereda saldo y consignar() de Cuenta</text>
+  </g>
+
+  <!-- Estructura del estado de la aplicación -->
+  <g>
+    <rect x="875" y="1690" width="600" height="320" rx="14" class="class-box" />
+    <rect x="875" y="1690" width="600" height="70" rx="14" fill="#536d68" />
+    <rect x="875" y="1735" width="600" height="25" fill="#536d68" />
+    <text x="905" y="1719" class="stereotype">&lt;&lt;estructura de estado&gt;&gt;</text>
+    <text x="905" y="1749" class="class-name">EstadoAplicacion</text>
+    <text x="905" y="1810" class="member">+ version: Number</text>
+    <text x="905" y="1844" class="member">+ clientes: Cliente[]</text>
+    <text x="905" y="1878" class="member">+ productos: ProductoFinanciero[]</text>
+    <text x="905" y="1912" class="member">+ movimientos: Movimiento[]</text>
+    <text x="905" y="1946" class="member">+ transaccionesTarjeta: TransaccionTarjeta[]</text>
+  </g>
+
+  <!-- Puntas de herencia sobre las cajas para que permanezcan visibles. -->
+  <path d="M 1475 377 L 1498 390 L 1475 403 Z" fill="#ffffff" stroke="#315b56" stroke-width="2.5" />
+  <path d="M 1162 510 L 1175 486 L 1188 510 Z" fill="#ffffff" stroke="#315b56" stroke-width="2.5" />
+  <path d="M 1057 920 L 1070 896 L 1083 920 Z" fill="#ffffff" stroke="#315b56" stroke-width="2.5" />
+  <path d="M 1267 920 L 1280 896 L 1293 920 Z" fill="#ffffff" stroke="#315b56" stroke-width="2.5" />
+
+  <!-- Etiquetas de relaciones -->
+  <rect x="686" y="305" width="178" height="74" rx="10" fill="#f2f6f3" />
+  <text x="700" y="330" class="relation">1        0..*</text>
+  <text x="700" y="359" class="note">asociados por IDs</text>
+  <text x="1490" y="375" class="relation">hereda</text>
+  <text x="1190" y="565" class="relation">hereda</text>
+  <text x="1150" y="1158" class="relation">heredan de Cuenta</text>
+  <rect x="682" y="686" width="162" height="104" rx="10" fill="#f2f6f3" />
+  <text x="694" y="716" class="note">IDs de producto</text>
+  <text x="694" y="744" class="note">origen/destino</text>
+  <text x="1945" y="745" class="relation">tarjetaId</text>
+
+  <!-- Leyenda -->
+  <line x1="95" y1="2100" x2="195" y2="2100" class="generalization" marker-end="url(#inheritance)" />
+  <text x="215" y="2108" class="note">Herencia: triángulo hacia la clase base</text>
+  <line x1="775" y1="2100" x2="875" y2="2100" class="association" />
+  <text x="895" y="2108" class="note">Asociación: relación entre objetos</text>
+  <text x="1150" y="2170" text-anchor="middle" class="subtitle">Los valores monetarios se almacenan en centavos · Las asociaciones entre clases usan identificadores</text>
+</svg>

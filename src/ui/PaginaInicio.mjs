@@ -1,9 +1,9 @@
 export function renderizarPaginaInicio(contenedor) {
   contenedor.innerHTML = `
     <header class="site-header">
-      <a class="brand" href="#inicio" data-navegar="inicio" aria-label="Mi Plata, inicio">
-        <span class="brand-mark" aria-hidden="true">MP</span>
-        <span>Mi Plata</span>
+      <a class="brand" href="#inicio" data-navegar="inicio" aria-label="Plata First, inicio">
+        <span class="brand-mark" aria-hidden="true">PF</span>
+        <span>Plata First</span>
       </a>
       <nav class="main-navigation" aria-label="Navegación principal">
         <button type="button" data-navegar="inicio">Inicio</button>
@@ -14,7 +14,7 @@ export function renderizarPaginaInicio(contenedor) {
 
     <section class="page-view landing-view" data-view="inicio" id="inicio" tabindex="-1">
       <div class="landing-copy">
-        <p class="eyebrow">Sucursal bancaria · Mi Plata</p>
+        <p class="eyebrow">Sucursal bancaria · Plata First</p>
         <h1>Tu dinero, en movimiento.</h1>
         <p>Consulta tus cuentas, organiza tus operaciones y revisa cada movimiento desde un solo lugar.</p>
         <div class="landing-actions">
@@ -41,7 +41,7 @@ export function renderizarPaginaInicio(contenedor) {
       </section>
       <section class="business-presentation" aria-labelledby="presentacion-empresarial-title">
         <div class="business-presentation__intro">
-          <p class="eyebrow">Mi Plata · Proyecto académico</p>
+          <p class="eyebrow">Plata First · Proyecto académico</p>
           <h2 id="presentacion-empresarial-title">Un banco digital pensado para las personas</h2>
           <p>Somos un banco digital enfocado en la satisfacción de nuestros usuarios. Nacimos como un proyecto académico y hoy hacemos parte de la comunidad CESDE.</p>
         </div>
@@ -49,7 +49,7 @@ export function renderizarPaginaInicio(contenedor) {
           class="story-carousel"
           role="region"
           aria-roledescription="carrusel"
-          aria-label="Historia de Mi Plata"
+          aria-label="Historia de Plata First"
           aria-live="off"
           data-story-carousel
         >
@@ -57,7 +57,7 @@ export function renderizarPaginaInicio(contenedor) {
             <article class="story-slide" role="group" aria-roledescription="diapositiva" aria-label="Hito 1 de 3" data-story-slide>
               <p class="eyebrow">Segundo semestre de 2026</p>
               <h3>Comenzamos como un proyecto académico</h3>
-              <p>Mi Plata nació como una idea para acercar la banca digital a las personas.</p>
+              <p>Plata First nació como una idea para acercar la banca digital a las personas.</p>
             </article>
             <article class="story-slide" role="group" aria-roledescription="diapositiva" aria-label="Hito 2 de 3" data-story-slide hidden>
               <p class="eyebrow">Hoy</p>
@@ -92,7 +92,7 @@ export function renderizarPaginaInicio(contenedor) {
       <header class="panel-heading">
         <div>
           <p class="eyebrow">Panel principal</p>
-          <h1>Mi Plata</h1>
+          <h1>Plata First</h1>
           <p data-saludo></p>
         </div>
         <div data-cerrar-sesion></div>
@@ -114,7 +114,7 @@ export function renderizarPaginaInicio(contenedor) {
     </section>
 
     <footer class="site-footer">
-      <p>Mi Plata · Simulación académica</p>
+      <p>Plata First · Simulación académica</p>
       <p class="site-footer__credits">Desarrollo para el segundo momento CESDE, materia FrontEnd1, Docente Beautyful Albeiro.</p>
       <nav id="redes-sociales" aria-label="Redes sociales">
         <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a>

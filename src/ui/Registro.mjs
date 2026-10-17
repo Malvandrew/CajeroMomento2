@@ -6,7 +6,7 @@ export function renderizarRegistro(contenedor, servicioAutenticacion, alRegistra
   formulario.id = "form-registro";
   formulario.noValidate = false;
   formulario.innerHTML = `
-    <h1>Crear cuenta Mi Plata</h1>
+    <h1>Crear cuenta Plata First</h1>
     <p>Esta es una simulación académica. Las contraseñas podrían leerse en los datos guardados; no uses credenciales bancarias reales.</p>
     <p>Los datos solo estarán disponibles en este dispositivo y navegador. Si borras sus datos, no se podrán recuperar.</p>
     <fieldset>

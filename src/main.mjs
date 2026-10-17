@@ -19,7 +19,7 @@ import { renderizarTarjetaCompra } from "./ui/TarjetaCompra.mjs";
 const applicationRoot = document.querySelector("#app");
 
 if (!applicationRoot) {
-  throw new Error("No se encontró el contenedor principal de Mi Plata.");
+  throw new Error("No se encontró el contenedor principal de Plata First.");
 }
 
 renderizarPaginaInicio(applicationRoot);
