@@ -22,14 +22,23 @@ export function renderizarPaginaInicio(contenedor) {
           <button class="button-secondary" type="button" data-navegar="sesion">Ya soy cliente</button>
         </div>
       </div>
-      <div class="landing-aside" aria-label="Productos de Mi Plata">
-        <p class="eyebrow">Productos disponibles</p>
-        <ul>
-          <li>Cuenta de ahorros</li>
-          <li>Cuenta corriente</li>
-          <li>Tarjeta de crédito</li>
+      <section class="landing-aside" aria-labelledby="productos-disponibles">
+        <h2 class="eyebrow product-section-title" id="productos-disponibles">Productos disponibles</h2>
+        <ul class="product-list">
+          <li class="product-card">
+            <h3 class="product-card__title">Cuenta de ahorros</h3>
+            <p class="product-card__description">Ahorra, consigna y retira dinero; genera interés según las condiciones del producto.</p>
+          </li>
+          <li class="product-card">
+            <h3 class="product-card__title">Cuenta corriente</h3>
+            <p class="product-card__description">Administra tus movimientos cotidianos con sobregiro sujeto a las condiciones de la cuenta.</p>
+          </li>
+          <li class="product-card">
+            <h3 class="product-card__title">Tarjeta de crédito</h3>
+            <p class="product-card__description">Realiza compras con tu cupo disponible y paga en cuotas, con intereses según el plazo.</p>
+          </li>
         </ul>
-      </div>
+      </section>
       <div data-global-feedback></div>
     </section>
 

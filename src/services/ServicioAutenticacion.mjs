@@ -4,6 +4,7 @@ import { CuentaCorriente } from "../models/CuentaCorriente.mjs";
 import { TarjetaCredito } from "../models/TarjetaCredito.mjs";
 import { Movimiento } from "../models/Movimiento.mjs";
 import { parsearCentavosNoNegativos } from "../utils/Dinero.mjs";
+import { validarDatosPersonales } from "../utils/ValidacionRegistro.mjs";
 
 function normalizarUsuario(usuario) {
   return usuario.trim().toLocaleLowerCase("es-CO");
@@ -47,9 +48,19 @@ export class ServicioAutenticacion {
   }
 
   registrar(datos) {
-    const identificacion = String(datos.numeroIdentificacion ?? "").trim();
-    const nombreCompleto = String(datos.nombreCompleto ?? "").trim();
-    const celular = String(datos.celular ?? "").trim();
+    const datosPersonales = {
+      numeroIdentificacion: String(datos.numeroIdentificacion ?? ""),
+      nombreCompleto: String(datos.nombreCompleto ?? ""),
+      celular: String(datos.celular ?? ""),
+    };
+    const erroresValidacion = validarDatosPersonales(datosPersonales);
+    if (Object.keys(erroresValidacion).length > 0) {
+      throw new Error(Object.values(erroresValidacion).join(" "));
+    }
+
+    const identificacion = datosPersonales.numeroIdentificacion.trim();
+    const nombreCompleto = datosPersonales.nombreCompleto.trim();
+    const celular = datosPersonales.celular.trim();
     const usuario = String(datos.usuario ?? "").trim();
     const contrasena = String(datos.contrasena ?? "");
     const confirmacion = String(datos.confirmacionContrasena ?? "");

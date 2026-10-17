@@ -1,4 +1,5 @@
 import { mostrarMensaje } from "./Renderizado.mjs";
+import { validarDatosPersonales } from "../utils/ValidacionRegistro.mjs";
 
 export function renderizarRegistro(contenedor, servicioAutenticacion, alRegistrar = () => {}) {
   const formulario = document.createElement("form");
@@ -11,11 +12,14 @@ export function renderizarRegistro(contenedor, servicioAutenticacion, alRegistra
     <fieldset>
       <legend>Datos personales</legend>
       <label for="registro-identificacion">Número de identificación</label>
-      <input id="registro-identificacion" name="numeroIdentificacion" autocomplete="off" required>
+      <input id="registro-identificacion" name="numeroIdentificacion" autocomplete="off" aria-describedby="registro-identificacion-error" required>
+      <div id="registro-identificacion-error" data-field-error="numeroIdentificacion"></div>
       <label for="registro-nombre">Nombre completo</label>
-      <input id="registro-nombre" name="nombreCompleto" autocomplete="name" required>
+      <input id="registro-nombre" name="nombreCompleto" autocomplete="name" aria-describedby="registro-nombre-error" required>
+      <div id="registro-nombre-error" data-field-error="nombreCompleto"></div>
       <label for="registro-celular">Celular</label>
-      <input id="registro-celular" name="celular" type="tel" autocomplete="tel" required>
+      <input id="registro-celular" name="celular" type="tel" autocomplete="tel" aria-describedby="registro-celular-error" required>
+      <div id="registro-celular-error" data-field-error="celular"></div>
       <label for="registro-usuario">Usuario</label>
       <input id="registro-usuario" name="usuario" autocomplete="username" required>
       <label for="registro-contrasena">Contraseña</label>
@@ -36,8 +40,38 @@ export function renderizarRegistro(contenedor, servicioAutenticacion, alRegistra
     <div data-feedback aria-live="polite"></div>
   `;
 
+  const camposPersonales = ["numeroIdentificacion", "nombreCompleto", "celular"];
+
+  function validarCampoPersonal(campo) {
+    const entrada = formulario.elements.namedItem(campo);
+    const feedbackCampo = formulario.querySelector(`[data-field-error="${campo}"]`);
+    const errores = validarDatosPersonales({ [campo]: entrada.value });
+    const mensajeError = errores[campo];
+
+    if (mensajeError) {
+      entrada.setAttribute("aria-invalid", "true");
+      mostrarMensaje(feedbackCampo, mensajeError, "error");
+      return false;
+    }
+
+    entrada.removeAttribute("aria-invalid");
+    feedbackCampo.replaceChildren();
+    return true;
+  }
+
+  for (const campo of camposPersonales) {
+    formulario.elements.namedItem(campo).addEventListener("blur", () => {
+      validarCampoPersonal(campo);
+    });
+  }
+
   formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
+    const camposValidos = camposPersonales.map(validarCampoPersonal).every(Boolean);
+    if (!camposValidos) {
+      return;
+    }
+
     const feedback = formulario.querySelector("[data-feedback]");
     const datos = Object.fromEntries(new FormData(formulario).entries());
 

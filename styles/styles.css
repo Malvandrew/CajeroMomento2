@@ -237,21 +237,46 @@ form button.button-primary:hover {
 }
 
 .landing-aside {
-  padding: 26px 28px;
-  border-left: 4px solid var(--accent);
-  color: white;
-  background: var(--surface-dark);
+  padding: 22px 24px;
+  border: 2px solid var(--brand);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--paper);
 }
 
-.landing-aside .eyebrow {
-  color: #ffffff;
+.product-section-title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
 }
 
-.landing-aside ul {
+.product-list {
   display: grid;
-  gap: 14px;
-  margin: 18px 0 0;
-  padding-left: 18px;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.product-card__title {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.product-card__description {
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .page-view[hidden],
@@ -477,7 +502,7 @@ select:focus {
   }
 
   .landing-aside {
-    padding: 22px;
+    padding: 18px;
   }
 
   .panel-heading {
