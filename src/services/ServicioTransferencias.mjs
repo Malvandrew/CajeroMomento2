@@ -13,6 +13,10 @@ function clonarEstado(estado) {
   };
 }
 
+function crearMapaNombresTitulares(clientes) {
+  return new Map(clientes.map((cliente) => [cliente.id, cliente.nombreCompleto]));
+}
+
 function crearMarcaDeTiempo(fecha) {
   return {
     fecha: [
@@ -67,24 +71,28 @@ export class ServicioTransferencias {
 
   listarCuentasOrigen(clienteId) {
     const estado = this.almacenamiento.cargar();
+    const nombresTitulares = crearMapaNombresTitulares(estado.clientes);
     return estado.productos
       .filter((producto) => producto.clienteId === clienteId && nombresTipo[producto.tipo])
       .map((producto) => ({
         id: producto.id,
         tipo: producto.tipo,
         nombre: nombresTipo[producto.tipo],
+        nombreCompleto: nombresTitulares.get(producto.clienteId) ?? "Titular no disponible",
         saldoCentavos: producto.saldoCentavos,
       }));
   }
 
   listarCuentasDestino(productoOrigenId) {
     const estado = this.almacenamiento.cargar();
+    const nombresTitulares = crearMapaNombresTitulares(estado.clientes);
     return estado.productos
       .filter((producto) => producto.id !== productoOrigenId && nombresTipo[producto.tipo])
       .map((producto) => ({
         id: producto.id,
         tipo: producto.tipo,
         nombre: nombresTipo[producto.tipo],
+        nombreCompleto: nombresTitulares.get(producto.clienteId) ?? "Titular no disponible",
       }));
   }
 

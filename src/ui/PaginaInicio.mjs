@@ -39,6 +39,44 @@ export function renderizarPaginaInicio(contenedor) {
           </li>
         </ul>
       </section>
+      <section class="business-presentation" aria-labelledby="presentacion-empresarial-title">
+        <div class="business-presentation__intro">
+          <p class="eyebrow">Mi Plata · Proyecto académico</p>
+          <h2 id="presentacion-empresarial-title">Un banco digital pensado para las personas</h2>
+          <p>Somos un banco digital enfocado en la satisfacción de nuestros usuarios. Nacimos como un proyecto académico y hoy hacemos parte de la comunidad CESDE.</p>
+        </div>
+        <section
+          class="story-carousel"
+          role="region"
+          aria-roledescription="carrusel"
+          aria-label="Historia de Mi Plata"
+          aria-live="off"
+          data-story-carousel
+        >
+          <div class="story-carousel__slides">
+            <article class="story-slide" role="group" aria-roledescription="diapositiva" aria-label="Hito 1 de 3" data-story-slide>
+              <p class="eyebrow">Segundo semestre de 2026</p>
+              <h3>Comenzamos como un proyecto académico</h3>
+              <p>Mi Plata nació como una idea para acercar la banca digital a las personas.</p>
+            </article>
+            <article class="story-slide" role="group" aria-roledescription="diapositiva" aria-label="Hito 2 de 3" data-story-slide hidden>
+              <p class="eyebrow">Hoy</p>
+              <h3>Más de 10 clientes</h3>
+              <p>Seguimos creciendo junto a quienes hacen parte de nuestro proyecto.</p>
+            </article>
+            <article class="story-slide" role="group" aria-roledescription="diapositiva" aria-label="Hito 3 de 3" data-story-slide hidden>
+              <p class="eyebrow">CESDE</p>
+              <h3>El banco más importante del CESDE</h3>
+              <p>Una iniciativa académica que creció dentro de nuestra comunidad.</p>
+            </article>
+          </div>
+          <div class="story-carousel__controls">
+            <button type="button" aria-label="Mostrar hito anterior" data-story-previous>&lt;</button>
+            <p class="story-carousel__position" aria-live="off" data-story-position>1 de 3</p>
+            <button type="button" aria-label="Mostrar hito siguiente" data-story-next>&gt;</button>
+          </div>
+        </section>
+      </section>
       <div data-global-feedback></div>
     </section>
 
@@ -77,10 +115,85 @@ export function renderizarPaginaInicio(contenedor) {
 
     <footer class="site-footer">
       <p>Mi Plata · Simulación académica</p>
+      <p class="site-footer__credits">Desarrollo para el segundo momento CESDE, materia FrontEnd1, Docente Beautyful Albeiro.</p>
       <nav id="redes-sociales" aria-label="Redes sociales">
         <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
         <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook</a>
       </nav>
     </footer>
   `;
+
+  const storyCarousel = contenedor.querySelector("[data-story-carousel]");
+  const storySlides = [...storyCarousel.querySelectorAll("[data-story-slide]")];
+  const storyPosition = storyCarousel.querySelector("[data-story-position]");
+  let currentStoryIndex = 0;
+  let storyTimer = null;
+  let pointerInsideStory = false;
+  let focusInsideStory = false;
+
+  function displayStorySlide(index, announceChange = false) {
+    currentStoryIndex = (index + storySlides.length) % storySlides.length;
+    storySlides.forEach((slide, slideIndex) => {
+      slide.hidden = slideIndex !== currentStoryIndex;
+    });
+    storyPosition.setAttribute("aria-live", announceChange ? "polite" : "off");
+    storyPosition.textContent = `${currentStoryIndex + 1} de ${storySlides.length}`;
+  }
+
+  function clearStoryTimer() {
+    if (storyTimer !== null) {
+      clearTimeout(storyTimer);
+      storyTimer = null;
+    }
+  }
+
+  function scheduleStoryAdvance() {
+    clearStoryTimer();
+    if (pointerInsideStory || focusInsideStory) {
+      return;
+    }
+
+    storyTimer = setTimeout(() => {
+      storyTimer = null;
+      displayStorySlide(currentStoryIndex + 1);
+      scheduleStoryAdvance();
+    }, 2000);
+  }
+
+  function resumeStoryWhenReady() {
+    if (!pointerInsideStory && !focusInsideStory) {
+      scheduleStoryAdvance();
+    }
+  }
+
+  storyCarousel.querySelector("[data-story-previous]").addEventListener("click", () => {
+    displayStorySlide(currentStoryIndex - 1, true);
+    scheduleStoryAdvance();
+  });
+  storyCarousel.querySelector("[data-story-next]").addEventListener("click", () => {
+    displayStorySlide(currentStoryIndex + 1, true);
+    scheduleStoryAdvance();
+  });
+
+  storyCarousel.addEventListener("pointerenter", () => {
+    pointerInsideStory = true;
+    clearStoryTimer();
+  });
+  storyCarousel.addEventListener("pointerleave", () => {
+    pointerInsideStory = false;
+    resumeStoryWhenReady();
+  });
+  storyCarousel.addEventListener("focusin", () => {
+    focusInsideStory = true;
+    clearStoryTimer();
+  });
+  storyCarousel.addEventListener("focusout", (evento) => {
+    if (storyCarousel.contains(evento.relatedTarget)) {
+      return;
+    }
+    focusInsideStory = false;
+    resumeStoryWhenReady();
+  });
+
+  scheduleStoryAdvance();
 }

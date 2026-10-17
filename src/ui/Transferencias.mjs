@@ -27,7 +27,7 @@ export function renderizarTransferencias(contenedor, servicioTransferencias, cli
   for (const cuenta of cuentasOrigen) {
     const opcion = document.createElement("option");
     opcion.value = cuenta.id;
-    opcion.textContent = `${cuenta.nombre} · ${cuenta.id.slice(-6)}`;
+    opcion.textContent = `${cuenta.nombre} · ${cuenta.id.slice(-6)} · ${cuenta.nombreCompleto}`;
     origen.append(opcion);
   }
 
@@ -37,7 +37,7 @@ export function renderizarTransferencias(contenedor, servicioTransferencias, cli
     for (const cuenta of cuentasDestino) {
       const opcion = document.createElement("option");
       opcion.value = cuenta.id;
-      opcion.textContent = `${cuenta.nombre} · ${cuenta.id.slice(-6)}`;
+      opcion.textContent = `${cuenta.nombre} · ${cuenta.id.slice(-6)} · ${cuenta.nombreCompleto}`;
       destino.append(opcion);
     }
 
