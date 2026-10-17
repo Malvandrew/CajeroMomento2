@@ -21,4 +21,16 @@ export class Cuenta extends ProductoFinanciero {
     this.saldoCentavos += montoCentavos;
     return this.saldoCentavos;
   }
+
+  debitarPagoTarjeta(montoCentavos) {
+    if (!Number.isSafeInteger(montoCentavos) || montoCentavos <= 0) {
+      throw new RangeError("El pago de tarjeta debe ser un entero positivo en centavos.");
+    }
+    if (montoCentavos > this.saldoCentavos) {
+      throw new RangeError("La cuenta no tiene fondos suficientes para pagar la cuota.");
+    }
+
+    this.saldoCentavos -= montoCentavos;
+    return this.saldoCentavos;
+  }
 }

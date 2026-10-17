@@ -90,6 +90,10 @@ try {
       panel.querySelector('[data-panel-section="tarjeta"]'),
       servicioTarjeta,
       clienteId,
+      () => {
+        actualizarCuentas(clienteId);
+        actualizarHistorial(clienteId);
+      },
     );
 
     navegacion.mostrarVista("panel");

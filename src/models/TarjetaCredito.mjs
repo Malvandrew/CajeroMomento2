@@ -31,4 +31,16 @@ export class TarjetaCredito extends ProductoFinanciero {
     this.creditoUtilizadoCentavos += montoOriginalCentavos;
     return this.obtenerCreditoDisponibleCentavos();
   }
+
+  aplicarPagoCapital(montoCapitalCentavos) {
+    if (!Number.isSafeInteger(montoCapitalCentavos) || montoCapitalCentavos < 0) {
+      throw new RangeError("El capital pagado debe ser un entero no negativo en centavos.");
+    }
+
+    this.creditoUtilizadoCentavos = Math.max(
+      0,
+      this.creditoUtilizadoCentavos - montoCapitalCentavos,
+    );
+    return this.obtenerCreditoDisponibleCentavos();
+  }
 }

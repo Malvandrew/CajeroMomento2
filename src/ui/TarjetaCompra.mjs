@@ -19,38 +19,28 @@ function renderizarHistorial(contenedor, transacciones) {
     return;
   }
 
-  const tabla = document.createElement("table");
-  tabla.className = "movement-table";
-  tabla.innerHTML = `
-    <thead><tr><th scope="col">Fecha</th><th scope="col">Compra</th><th scope="col">Cuotas</th><th scope="col">Tasa</th><th scope="col">Valor cuota</th><th scope="col">Total</th></tr></thead>
-    <tbody></tbody>
-  `;
-  const cuerpo = tabla.querySelector("tbody");
-
   for (const transaccion of [...transacciones].reverse()) {
-    const fila = document.createElement("tr");
-    const valores = [
-      `${transaccion.fecha} ${transaccion.hora}`,
-      formatearCentavos(transaccion.montoOriginalCentavos),
-      String(transaccion.numeroCuotas),
-      obtenerTextoTasa(transaccion.tasaMensual),
-      formatearCentavos(transaccion.cuotasCentavos[0]),
-      formatearCentavos(transaccion.totalAPagarCentavos),
-    ];
+    const detalle = document.createElement("details");
+    const resumen = document.createElement("summary");
+    resumen.textContent = `Compra del ${transaccion.fecha} · ${formatearCentavos(transaccion.montoOriginalCentavos)} · ${obtenerTextoTasa(transaccion.tasaMensual)} · Total: ${formatearCentavos(transaccion.totalAPagarCentavos)} · Pendiente: ${formatearCentavos(transaccion.deudaPendienteCentavos)}`;
+    detalle.append(resumen);
 
-    for (const valor of valores) {
-      const celda = document.createElement("td");
-      celda.textContent = valor;
-      fila.append(celda);
+    const listaCuotas = document.createElement("ol");
+    for (const cuota of transaccion.cuotas) {
+      const elemento = document.createElement("li");
+      const estado = cuota.pagada
+        ? `Pagada el ${cuota.pago.fecha} ${cuota.pago.hora}`
+        : "Pendiente";
+      elemento.textContent = `Cuota ${cuota.numeroCuota} de ${transaccion.numeroCuotas}: ${formatearCentavos(cuota.montoCentavos)} · Capital que repone cupo: ${formatearCentavos(cuota.montoCapitalCentavos)} · ${estado}`;
+      listaCuotas.append(elemento);
     }
 
-    cuerpo.append(fila);
+    detalle.append(listaCuotas);
+    contenedor.append(detalle);
   }
-
-  contenedor.append(tabla);
 }
 
-export function renderizarTarjetaCompra(contenedor, servicioTarjeta, clienteId) {
+export function renderizarTarjetaCompra(contenedor, servicioTarjeta, clienteId, alPagar = () => {}) {
   let tarjeta = servicioTarjeta.obtenerTarjeta(clienteId);
   contenedor.innerHTML = `
     <section aria-labelledby="titulo-tarjeta">
@@ -66,21 +56,105 @@ export function renderizarTarjetaCompra(contenedor, servicioTarjeta, clienteId) 
         <div data-cotizacion aria-live="polite"></div>
         <button class="button-primary" type="submit">Confirmar compra</button>
       </form>
-      <div data-feedback aria-live="polite"></div>
+      <div data-feedback-compra aria-live="polite"></div>
+      <form data-form-pago>
+        <h3>Pagar cuota pendiente</h3>
+        <label for="compra-pago">Compra</label>
+        <select id="compra-pago" name="transaccionTarjetaId" required></select>
+        <label for="cuenta-pago">Cuenta de origen</label>
+        <select id="cuenta-pago" name="cuentaOrigenId" required></select>
+        <p data-resumen-pago aria-live="polite"></p>
+        <p>El pago no agrega intereses ni comisiones. Se conserva el interés ya incluido en la compra.</p>
+        <button class="button-primary" type="submit" disabled>Pagar siguiente cuota</button>
+      </form>
+      <div data-feedback-pago aria-live="polite"></div>
       <div data-historial-compras></div>
     </section>
   `;
-
-  contenedor.querySelector("[data-limite]").textContent = formatearCentavos(tarjeta.limiteCreditoCentavos);
-  contenedor.querySelector("[data-utilizado]").textContent = formatearCentavos(tarjeta.creditoUtilizadoCentavos);
-  contenedor.querySelector("[data-disponible]").textContent = formatearCentavos(tarjeta.creditoDisponibleCentavos);
 
   const formulario = contenedor.querySelector("[data-form-compra]");
   const monto = formulario.elements.monto;
   const cuotas = formulario.elements.numeroCuotas;
   const cotizacion = formulario.querySelector("[data-cotizacion]");
-  const feedback = contenedor.querySelector("[data-feedback]");
+  const feedbackCompra = contenedor.querySelector("[data-feedback-compra]");
   const boton = formulario.querySelector("button[type=submit]");
+  const formularioPago = contenedor.querySelector("[data-form-pago]");
+  const compraPago = formularioPago.elements.transaccionTarjetaId;
+  const cuentaPago = formularioPago.elements.cuentaOrigenId;
+  const resumenPago = formularioPago.querySelector("[data-resumen-pago]");
+  const botonPago = formularioPago.querySelector("button[type=submit]");
+
+  function actualizarResumenTarjeta() {
+    contenedor.querySelector("[data-limite]").textContent = formatearCentavos(tarjeta.limiteCreditoCentavos);
+    contenedor.querySelector("[data-utilizado]").textContent = formatearCentavos(tarjeta.creditoUtilizadoCentavos);
+    contenedor.querySelector("[data-disponible]").textContent = formatearCentavos(tarjeta.creditoDisponibleCentavos);
+  }
+
+  function actualizarFormularioPago() {
+    const transaccionSeleccionadaId = compraPago.value;
+    const cuentaSeleccionadaId = cuentaPago.value;
+    const transaccionesPendientes = tarjeta.transacciones.filter(
+      (transaccion) => transaccion.cuotas.some((cuota) => !cuota.pagada),
+    );
+    compraPago.replaceChildren();
+    const opcionCompraInicial = document.createElement("option");
+    opcionCompraInicial.value = "";
+    opcionCompraInicial.textContent = transaccionesPendientes.length > 0
+      ? "Selecciona una compra"
+      : "No hay cuotas pendientes";
+    compraPago.append(opcionCompraInicial);
+
+    for (const transaccion of transaccionesPendientes) {
+      const cuotaPendiente = transaccion.cuotas.find((cuota) => !cuota.pagada);
+      const opcion = document.createElement("option");
+      opcion.value = transaccion.id;
+      opcion.dataset.numeroCuota = String(cuotaPendiente.numeroCuota);
+      opcion.textContent = `Compra del ${transaccion.fecha} · Cuota ${cuotaPendiente.numeroCuota} de ${transaccion.numeroCuotas}`;
+      compraPago.append(opcion);
+    }
+
+    if (transaccionesPendientes.some((transaccion) => transaccion.id === transaccionSeleccionadaId)) {
+      compraPago.value = transaccionSeleccionadaId;
+    }
+
+    const cuentas = servicioTarjeta.listarCuentasPago(clienteId);
+    cuentaPago.replaceChildren();
+    const opcionCuentaInicial = document.createElement("option");
+    opcionCuentaInicial.value = "";
+    opcionCuentaInicial.textContent = cuentas.length > 0
+      ? "Selecciona una cuenta"
+      : "No hay cuentas de depósito disponibles";
+    cuentaPago.append(opcionCuentaInicial);
+
+    for (const cuenta of cuentas) {
+      const opcion = document.createElement("option");
+      opcion.value = cuenta.id;
+      opcion.textContent = `${cuenta.tipo === "ahorros" ? "Cuenta de ahorros" : "Cuenta corriente"} · Saldo: ${formatearCentavos(cuenta.saldoCentavos)}`;
+      cuentaPago.append(opcion);
+    }
+
+    if (cuentas.some((cuenta) => cuenta.id === cuentaSeleccionadaId)) {
+      cuentaPago.value = cuentaSeleccionadaId;
+    }
+
+    const transaccion = transaccionesPendientes.find(
+      (elemento) => elemento.id === compraPago.value,
+    );
+    const cuotaPendiente = transaccion?.cuotas.find((cuota) => !cuota.pagada);
+    const cuenta = cuentas.find((elemento) => elemento.id === cuentaPago.value);
+    if (cuotaPendiente) {
+      resumenPago.textContent = `Siguiente cuota: ${formatearCentavos(cuotaPendiente.montoCentavos)} · Capital que repone cupo: ${formatearCentavos(cuotaPendiente.montoCapitalCentavos)}.`;
+      if (cuenta && cuenta.saldoCentavos < cuotaPendiente.montoCentavos) {
+        resumenPago.textContent += " Saldo insuficiente en la cuenta seleccionada.";
+      }
+    } else {
+      resumenPago.textContent = "Selecciona una compra con cuotas pendientes.";
+    }
+
+    botonPago.disabled = !cuotaPendiente
+      || !cuenta
+      || cuenta.saldoCentavos < cuotaPendiente.montoCentavos;
+  }
 
   function actualizarCotizacion() {
     boton.disabled = false;
@@ -119,17 +193,48 @@ export function renderizarTarjetaCompra(contenedor, servicioTarjeta, clienteId) 
     try {
       const resultado = servicioTarjeta.registrarCompra(clienteId, tarjeta.id, monto.value, Number(cuotas.value));
         tarjeta = servicioTarjeta.obtenerTarjeta(clienteId);
-      contenedor.querySelector("[data-limite]").textContent = formatearCentavos(tarjeta.limiteCreditoCentavos);
-      contenedor.querySelector("[data-utilizado]").textContent = formatearCentavos(tarjeta.creditoUtilizadoCentavos);
-      contenedor.querySelector("[data-disponible]").textContent = formatearCentavos(tarjeta.creditoDisponibleCentavos);
+        actualizarResumenTarjeta();
       formulario.reset();
       actualizarCotizacion();
       renderizarHistorial(contenedor.querySelector("[data-historial-compras]"), tarjeta.transacciones);
-      mostrarMensaje(feedback, `Compra aprobada. Cupo disponible: ${formatearCentavos(resultado.creditoDisponibleCentavos)}.`, "exito");
+        actualizarFormularioPago();
+        mostrarMensaje(feedbackCompra, `Compra aprobada. Cupo disponible: ${formatearCentavos(resultado.creditoDisponibleCentavos)}.`, "exito");
     } catch (error) {
-      mostrarMensaje(feedback, error.message, "error");
+        mostrarMensaje(feedbackCompra, error.message, "error");
     }
   });
 
+    compraPago.addEventListener("change", actualizarFormularioPago);
+    cuentaPago.addEventListener("change", actualizarFormularioPago);
+    formularioPago.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+      const opcionCompra = compraPago.selectedOptions[0];
+      const transaccionTarjetaId = compraPago.value;
+      const numeroCuota = Number(opcionCompra?.dataset.numeroCuota);
+      try {
+        const resultado = servicioTarjeta.pagarCuota(
+          clienteId,
+          transaccionTarjetaId,
+          numeroCuota,
+          cuentaPago.value,
+        );
+        tarjeta = servicioTarjeta.obtenerTarjeta(clienteId);
+        actualizarResumenTarjeta();
+        renderizarHistorial(contenedor.querySelector("[data-historial-compras]"), tarjeta.transacciones);
+        compraPago.value = "";
+        actualizarFormularioPago();
+        mostrarMensaje(
+          contenedor.querySelector("[data-feedback-pago]"),
+          `Cuota pagada por ${formatearCentavos(resultado.pago.montoCentavos)}. Capital que repone cupo: ${formatearCentavos(resultado.pago.montoCapitalCentavos)}. Disponible: ${formatearCentavos(resultado.creditoDisponibleCentavos)}.`,
+          "exito",
+        );
+        alPagar();
+      } catch (error) {
+        mostrarMensaje(contenedor.querySelector("[data-feedback-pago]"), error.message, "error");
+      }
+    });
+
+    actualizarResumenTarjeta();
   renderizarHistorial(contenedor.querySelector("[data-historial-compras]"), tarjeta.transacciones);
+    actualizarFormularioPago();
 }
